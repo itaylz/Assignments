@@ -90,7 +90,9 @@ public class MyMap2D implements Map2D{
 	
 		int init_r = p.ix() + (int)Math.round(rad), init_l = p.ix() - (int)Math.round(rad);
 		int init_u = p.iy() + (int)Math.round(rad), init_d = p.iy() - (int)Math.round(rad);
-	
+		
+		int counter = 0;
+
 		if(init_r>getWidth()){
 			init_r = getWidth();
 		}
@@ -109,6 +111,9 @@ public class MyMap2D implements Map2D{
 				double length = p.distance(current);
 				if(length<=rad){
 					setPixel(l, h, col);
+					counter+=1;
+					System.out.println(counter);
+
 				}
 			}
 		}
@@ -123,78 +128,71 @@ public class MyMap2D implements Map2D{
 	@Override
 	public int fill(int x, int y, int new_v) {
 		// TODO Auto-generated method stub
-		Point2D start = new Point2D(x,y);
+		Point2D init = new Point2D(x,y);
+		Queue<Point2D> to_fill = new LinkedList<Point2D>(); 
+		to_fill.add(init);
 
-
-		
-		Queue <Point2D> to_fill = new LinkedList<Point2D>();
-		to_fill.add(start);
-		
-		for(int l = 0;l<getWidth();l++){
+		/**for(int l = 0;l<getWidth();l++){
 			for(int h =0;h<getHeight();h++){
 				if(getPixel(x,y)!=WHITE){
 					break;
 				}
-				fill(new_v);
+				else{
+					fill(new_v);
+				}
+
 			}
-		}
+		}*/
 	
-		int been_x = start.ix();
-		int been_y = start.iy();
-		while(getPixel(x,y)!=WHITE){
-			if(getPixel(been_x,been_y)==getPixel(next_point(x,y,0))&&y<getHeight()-1){
-				to_fill.add(next_point(x,y,0));
-				y++;
-			}
-			
-			if(getPixel(been_x,been_y)==getPixel(next_point(x,y,2))&&y>0){
-				to_fill.add(next_point(x,y,2));
-				y--;
-			}
-			
-			if(getPixel(been_x,been_y)==getPixel(next_point(x,y,3))&&x>0){
-				to_fill.add(next_point(x,y,3));
-				x--;
-			}
-			
-			if(getPixel(been_x,been_y)==getPixel(next_point(x,y,1))&&x<getWidth()-1){
-				to_fill.add(next_point(x,y,1));
-				x++;
-			}
+		int counter = 0;
+		while(!to_fill.isEmpty()){
+			LinkedList<Point2D> points_to_fill = points_to_fill(init);
+			Point2D vector = points_to_fill.remove();
+			setPixel(vector, new_v);
+			to_fill.addAll(points_to_fill);
+			counter+=1;
+			System.out.println(counter);
 		}
-		for(Point2D item:to_fill){
-			setPixel(item, new_v);
-		}
+		System.out.println("sss");
+
+		
 			return getPixel(x,y);
 	}
 
-	private int next_point(Point2D p){
-		return next_point(p.ix(),p.iy());
+	private LinkedList<Point2D> points_to_fill(Point2D p){
+		return points_to_fill(p.ix(),p.iy());
 	}
 
-	private Point2D next_point(int x, int y, int direction){
-		Point2D next_point = new Point2D(x,y);
-		switch(direction){
-			case(0):
-				Point2D up = new Point2D(x,y+1);
-				next_point = up;
-				break;
-			case(1):
-				Point2D right = new Point2D(x+1,y);
-				next_point = right;
-				break;
-			case(2):
-				Point2D down = new Point2D(x,y-1);
-				next_point = down;
-				break;
-			case(3):
-				Point2D left = new Point2D(x-1,y);
-				next_point = left;
-				break;
-		}
-
-		return next_point;
+	private LinkedList<Point2D> points_to_fill(int x, int y){
+		LinkedList<Point2D> to_fill = new LinkedList<Point2D>();
+		Point2D current = new Point2D(x,y);
+		Point2D up = new Point2D(x,y+1);
+		Point2D down = new Point2D(x, y-1);
+		Point2D left = new Point2D(x-1,y);
+		Point2D right = new Point2D(x+1,y);
 		
+		if(within_map(up)==true&&getPixel(up)==getPixel(current)){
+			to_fill.add(up);
+		}
+		if(within_map(down)==true&&getPixel(down)==getPixel(current)){
+			to_fill.add(down);
+		}
+		if(within_map(left)==true&&getPixel(left)==getPixel(current)){
+			to_fill.add(left);
+		}
+		if(within_map(right)==true&&getPixel(right)==getPixel(current)){
+			to_fill.add(right);
+		}
+		return to_fill;
+		
+	}
+
+	private boolean within_map(Point2D p){
+		boolean inbounds = true;
+		if(p.ix()<0||p.ix()>getWidth()|| p.iy()<0||p.iy()>getHeight()){
+			inbounds = false;
+		}
+		return inbounds;
 	}
 
 
