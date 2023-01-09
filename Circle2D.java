@@ -18,7 +18,7 @@ public class Circle2D implements GeoShapeable{
 	public double getRadius() {return this._radius;}
 	 @Override
 	    public String toString()
-	    { return _center.toString()+", "+_radius;}
+	    { return _center.toString()+", "+Double.toString(_radius);}
 	@Override
 	public boolean contains(Point2D ot) {
 		double dist = ot.distance(this._center);

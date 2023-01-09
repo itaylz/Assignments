@@ -3,9 +3,8 @@ package Exe.Ex4;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -16,8 +15,6 @@ import java.util.*;
  */
 public class ShapeCollection implements ShapeCollectionable{
     private ArrayList<GUI_Shapeable> _shapes;
-
-    private static final File home = FileSystemView.getFileSystemView().getHomeDirectory();
 
     public ShapeCollection() {
         _shapes = new ArrayList<GUI_Shapeable>();
@@ -73,7 +70,7 @@ public class ShapeCollection implements ShapeCollectionable{
     @Override
     public void removeAll() {
         //////////add your code below ///////////
-        _shapes.removeAll(_shapes);
+        _shapes.clear();
         //////////////////////////////////////////
     }
 
@@ -81,21 +78,25 @@ public class ShapeCollection implements ShapeCollectionable{
     public void save(String file) {
         //////////add your code below ///////////
         try {
-            Files.writeString(home.toPath(), file, StandardCharsets.UTF_8);
+            FileWriter saved_file = new FileWriter(file);
+            for (GUI_Shapeable shape : _shapes) {
+                saved_file.append(shape.toString()).append(String.valueOf('\n'));
+            }
+            saved_file.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Could not open \"" + file + "\" for writing: " + e.getMessage());
+            System.err.println("Looked in " + System.getProperty("user.dir"));
         }
-        catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        //////////////////////////////////////////
     }
+        //////////////////////////////////////////
+
 
     @Override
     public void load(String file) {
         ////////// add your code below ///////////
         try {
-            File myObj = new File(home.toURI());
-            Scanner myReader = new Scanner(myObj);
+            File saved_file = new File(file);
+            Scanner myReader = new Scanner(saved_file);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 System.out.println(data);
@@ -131,22 +132,51 @@ public class ShapeCollection implements ShapeCollectionable{
             }
             Collections.addAll(shapes, g.getPoints());
         }
-        sortPoints(shapes);
-
-        ans = new Rect2D(,,,);
+        ans = new Rect2D(sortPoints(shapes));
         //////////////////////////////////////////
         return ans;
     }
 
-    private Point2D sortPoints(ArrayList<Point2D> points){
-        Iterator<Point2D> it = points.iterator();
-        while(it.hasNext()){
-            if(it.next().x()<it.hasNext().x()){
 
+    private static ArrayList<Point2D> sortPoints(ArrayList<Point2D> points) {
+        // Use an anonymous inner class to create a comparator that compares
+        // the size of two points.
+        Comparator<Point2D> comparator = new Comparator<Point2D>(){
+            @Override
+            public int compare(Point2D p1, Point2D p2) {
+                return Double.compare(p1.x(), p2.x());
             }
+        };
+
+        // Use an iterator to sort the points in the list using the comparator.
+        Iterator<Point2D> iterator = points.iterator();
+        ArrayList<Point2D> box_points = new ArrayList<Point2D>();
+        double minX;
+        double minY;
+        double maxX;
+        double maxY;
+        while (iterator.hasNext()) {
+            Point2D p1 = iterator.next();
+            Point2D p2 = iterator.next();
+            minX = Math.min(p1.x(), p2.x());
+            minY = Math.min(p1.y(), p2.y());
+            maxX = Math.max(p1.x(), p2.x());
+            maxY = Math.min(p1.x(), p2.x());
+
+            Point2D point1 = new Point2D(minX,minY);
+            Point2D point2 = new Point2D(minX, maxY);
+            Point2D point3 = new Point2D(maxX,minY);
+            Point2D point4 = new Point2D(maxX,maxY);
+
+            box_points.add(point1);
+            box_points.add(point2);
+            box_points.add(point3);
+            box_points.add(point4);
         }
-        return null;
+        return box_points;
     }
+
+
     @Override
     public String toString() {
         String ans = "";
@@ -155,6 +185,4 @@ public class ShapeCollection implements ShapeCollectionable{
         }
         return ans;
     }
-
-
 }

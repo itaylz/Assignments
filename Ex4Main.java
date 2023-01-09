@@ -11,7 +11,8 @@ import java.awt.Color;
  * @author boaz.ben-moshe
  *
  */
-public class Ex4Main {
+public class
+Ex4Main {
 
     public static void main(String[] args) {
         // t1();
@@ -43,10 +44,9 @@ public class Ex4Main {
     public static void t3() {
         Ex4 ex4 = Ex4.getInstance();
         ShapeCollectionable shapes = ex4.getShape_Collection();
-        String file = "a0.txt"; //make sure the file is your working directory.
+        String file =".\\java_code\\Ex4\\Saves\\a0"; //make sure the file is your working directory.
         shapes.load(file);
         ex4.init(shapes);
         ex4.show();
     }
-
 }

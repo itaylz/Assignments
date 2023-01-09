@@ -29,7 +29,9 @@ public class Segment2D implements GeoShapeable{
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
-		return false;
+		double minX = Math.min(_p1.x(), _point2.x()), maxX = Math.max(_point1.x(), _point2.x()), minY = Math.min(_point1.y(), _point2.y()), maxY = Math.max(_point1.y(), _p2.y());
+		if (ot.x() < minX || ot.x() > maxX || ot.y() < minY || ot.y() > maxY) return false;
+		return !(ot.distance(this) > 0.1);
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class Segment2D implements GeoShapeable{
 	@Override
 	public void move(Point2D vec) {
 		// TODO Auto-generated method stub
-		Point2D translated1 = new Point2D(this._point1.x() + vec.x(),this._point1.y() + vec.y());
-		Point2D translated2 = new Point2D(this._point2.x() + vec.x(),this._point2.y() + vec.y());
+		_point1.move(vec);
+		_point2.move(vec);
 	}
 
 	@Override
@@ -61,13 +63,15 @@ public class Segment2D implements GeoShapeable{
 	@Override
 	public void scale(Point2D center, double ratio) {
 		// TODO Auto-generated method stub
-		
+		_point1.scale(center,ratio);
+		_point2.scale(center,ratio);
 	}
 
 	@Override
 	public void rotate(Point2D center, double angleDegrees) {
 		// TODO Auto-generated method stub
-		
+		_point1.rotate(center,angleDegrees);
+		_point2.rotate(center,angleDegrees);
 	}
 
 	@Override

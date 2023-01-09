@@ -73,7 +73,7 @@ public class GUIShape implements GUI_Shapeable {
 
     @Override
     public String toString() {
-        return null;
+        return "GUIShape," + _color.getRGB() + ',' + _fill + ',' + _tag + ',' + _g.getClass().getSimpleName() + ',' + _g;
     }
 
     private void init(String[] ww) {

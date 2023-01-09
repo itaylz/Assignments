@@ -11,24 +11,25 @@ import java.util.ArrayList;
 public class  Rect2D implements GeoShapeable {
 	private Point2D _p1, _p2, _p3, _p4;
 
-	public Rect2D(Point2D p1, Point2D p2,Point2D p3, Point2D p4){
+	public Rect2D(Point2D p1, Point2D p2,Point2D p3, Point2D p4) {
 
 		this._p1 = p1;
 		this._p2 = p2;
 		this._p3 = p3;
 		this._p4 = p4;
-
-		/**double min_x = Math.min(p1.x(),p2.x());
-		double max_x = Math.max(p1.x(),p2.x());
-		double min_y = Math.min(p1.y(),p2.y());
-		double max_y = Math.max(p1.y(),p2.y());
-
-		this._p1 = new Point2D(min_x,min_y);
-		this._p2 = new Point2D(min_x,max_y);
-		this._p3 = new Point2D(max_x,min_y);
-		this._p4 = new Point2D(max_x,max_y);*/
-
 	}
+
+	public Rect2D(ArrayList<Point2D> points){
+		if(points.size()>4){
+			throw new RuntimeException("cannot cast rectangle with more than 4 points.");
+		}
+		this._p1 = points.get(0);
+		this._p2 = points.get(1);
+		this._p3 = points.get(2);
+		this._p4 = points.get(3);
+	}
+
+
 	public Rect2D(Rect2D _new) {
 		this._p1 = new Point2D(_new._p1);
 		this._p2 = new Point2D(_new._p2);

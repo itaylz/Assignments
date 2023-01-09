@@ -1,5 +1,6 @@
 package Exe.Ex4;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -23,6 +24,14 @@ public class Polygon2D implements GeoShapeable{
 
 	public void addPoint(Point2D point){
 		_points.add(point);
+	}
+
+	public String toString() {
+		StringBuilder res = new StringBuilder(_points.get(0).toString());
+		for (int i = 1; i < _points.size(); i++) {
+			res.append(",").append(_points.get(i));
+		}
+		return res.toString();
 	}
 
 	@Override
@@ -58,20 +67,23 @@ public class Polygon2D implements GeoShapeable{
 	@Override
 	public void scale(Point2D center, double ratio) {
 		// TODO Auto-generated method stub
-		
+		for(Point2D point:_points){
+			point.scale(center,ratio);
+		}
 	}
 
 	@Override
 	public void rotate(Point2D center, double angleDegrees) {
 		// TODO Auto-generated method stub
-		
+		for(Point2D point : _points){
+			point.rotate(center,angleDegrees);
+		}
 	}
 
 	@Override
 	public Point2D[] getPoints() {
 		// TODO Auto-generated method stub
-		//return (Point2D[])_points;
-		return null;
+		return (Point2D[])_points.toArray();
 	}
 
 	public double[] getX() {
