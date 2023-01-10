@@ -1,5 +1,9 @@
 package Exe.Ex4;
 
+import javax.swing.text.Segment;
+import java.nio.channels.Pipe;
+import java.util.ArrayList;
+
 /**
  * This class represents a 2D Triangle in the plane.
  * Ex4: you should implement this class!
@@ -25,6 +29,12 @@ public class Triangle2D implements GeoShapeable{
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
+		//find equation of each side of triangle using points and segment
+		Segment2D seg1 = new Segment2D(_p1,_p2);
+		Segment2D seg2 = new Segment2D(_p2,_p3);
+		Segment2D seg3 = new Segment2D(_p3,_p1);
+
+
 		return false;
 	}
 

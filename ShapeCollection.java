@@ -138,7 +138,7 @@ public class ShapeCollection implements ShapeCollectionable{
     }
 
 
-    private static ArrayList<Point2D> sortPoints(ArrayList<Point2D> points) {
+    public static ArrayList<Point2D> sortPoints(ArrayList<Point2D> points) {
         // Use an anonymous inner class to create a comparator that compares
         // the size of two points.
         Comparator<Point2D> comparator = new Comparator<Point2D>(){
@@ -186,3 +186,4 @@ public class ShapeCollection implements ShapeCollectionable{
         return ans;
     }
 }
+

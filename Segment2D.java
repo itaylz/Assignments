@@ -1,6 +1,8 @@
 package Exe.Ex4;
 
 
+import java.awt.*;
+
 /**
  * This class represents a 2D segment on the plane, 
  * Ex4: you should implement this class!
@@ -29,7 +31,7 @@ public class Segment2D implements GeoShapeable{
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
-		double minX = Math.min(_p1.x(), _point2.x()), maxX = Math.max(_point1.x(), _point2.x()), minY = Math.min(_point1.y(), _point2.y()), maxY = Math.max(_point1.y(), _p2.y());
+		double minX = Math.min(_point1.x(), _point2.x()), maxX = Math.max(_point1.x(), _point2.x()), minY = Math.min(_point1.y(), _point2.y()), maxY = Math.max(_point1.y(), _point2.y());
 		if (ot.x() < minX || ot.x() > maxX || ot.y() < minY || ot.y() > maxY) return false;
 		return !(ot.distance(this) > 0.1);
 	}
@@ -74,6 +76,11 @@ public class Segment2D implements GeoShapeable{
 		_point2.rotate(center,angleDegrees);
 	}
 
+	public double distance(Segment2D seg){
+		Point2D[] point = seg.getPoints();
+		return Math.sqrt(Math.pow(point[1].x()-point[0].x(),2)+Math.pow(point[1].y()-point[0].y(),2));
+	}
+
 	@Override
 	public Point2D[] getPoints() {
 		// TODO Auto-generated method stub
@@ -81,3 +88,12 @@ public class Segment2D implements GeoShapeable{
 	}
 	
 }
+
+
+
+
+
+
+
+
+

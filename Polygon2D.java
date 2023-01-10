@@ -37,7 +37,19 @@ public class Polygon2D implements GeoShapeable{
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
-		return false;
+		Point2D[] points = this.getPoints();
+		int count = 0;
+		double x = ot.x();
+		double y = ot.y();
+		for(int i = 0;i<points.length;i++){
+			Segment2D side = new Segment2D(points[i],points[i+1]);
+			double x1 = side.getPoints()[0].x() , x2 = side.getPoints()[1].x(),
+					y1 = side.getPoints()[0].y(), y2 = side.getPoints()[1].y();
+			if(y<y1 != y<y2 && x<(x2-x1)*(y-y1/(y2-y1)+x1)){
+				count+=1;
+			}
+		}
+		return count % 2 != 0;
 	}
 
 	@Override

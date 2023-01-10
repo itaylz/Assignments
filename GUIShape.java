@@ -93,6 +93,7 @@ public class GUIShape implements GUI_Shapeable {
     @Override
     public void setShape(GeoShapeable g) {
         // TODO Auto-generated method stub
+        this._g = g;
     }
 }
 

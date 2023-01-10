@@ -1,6 +1,7 @@
 package Exe.Ex4;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * This class represents a 2D rectangle (NOT necessarily axis parallel - this shape can be rotated!)
@@ -40,8 +41,14 @@ public class  Rect2D implements GeoShapeable {
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
+		ArrayList<Point2D> points = new ArrayList<Point2D>();
+		points.add(this.getPoints()[0]);
+		points.add(this.getPoints()[1]);
+		points.add(this.getPoints()[2]);
+		points.add(this.getPoints()[3]);
 
-		return false;
+		points = ShapeCollection.sortPoints(points);
+		return ot.x() >= points.get(0).x() && ot.x() <= points.get(2).x() & ot.y() >= points.get(0).y() && ot.y() <= points.get(3).y();
 	}
 
 	@Override
@@ -50,7 +57,7 @@ public class  Rect2D implements GeoShapeable {
 		double length = Math.abs(this._p1.x() - this._p2.x());
 		double height = Math.abs(this._p1.y() - this._p2.y());
 
-		return area();
+		return length*height;
 	}
 
 	@Override
@@ -65,15 +72,6 @@ public class  Rect2D implements GeoShapeable {
 	@Override
 	public void move(Point2D vec) {
 		// TODO Auto-generated method stub
-		/**_p1.x() + vec.x();
-		_p1.y() + vec.y();
-		_p2.x() + vec.x();
-		_p2.y() + vec.y();
-		_p3.x() + vec.x();
-		_p3.y() + vec.y();
-		_p4.x() + vec.x();
-		_p4.y() + vec.y();*/
-
 
 	}
 
@@ -86,13 +84,21 @@ public class  Rect2D implements GeoShapeable {
 	@Override
 	public void scale(Point2D center, double ratio) {
 		// TODO Auto-generated method stub
-		
+		_p1.scale(center,ratio);
+		_p2.scale(center,ratio);
+		_p3.scale(center,ratio);
+		_p4.scale(center,ratio);
+
+
 	}
 
 	@Override
 	public void rotate(Point2D center, double angleDegrees) {
 		// TODO Auto-generated method stub
-
+		_p1.rotate(center,angleDegrees);
+		_p2.rotate(center,angleDegrees);
+		_p3.rotate(center,angleDegrees);
+		_p4.rotate(center,angleDegrees);
 		
 	}
 
