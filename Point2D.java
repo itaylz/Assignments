@@ -55,9 +55,16 @@ public class Point2D{
     {
         double dx = this.x() - p2.x();
         double dy = this.y() - p2.y();
-        double t = (dx*dx+dy*dy);
-        return Math.sqrt(t);
+        double delta = (dx*dx+dy*dy);
+        return Math.sqrt(delta);
     }
+
+    public double distance(Segment2D seg) {
+        Point2D[] points = seg.getPoints();
+        double dist = Math.sqrt(Math.pow((points[0].x() - points[1].x()), 2) + Math.pow((points[0].y() - points[1].y()), 2));
+        return dist * 2;
+    }
+
     @Override
     public boolean equals(Object p)
     {
@@ -112,6 +119,7 @@ public class Point2D{
         this._x = newPoint._x;  // set the point's coordinates to the new location
         this._y = newPoint._y;
         }
+
     public void rotate(double angleDegrees) {
         double mag = this.distance();
         double oldAngleRadians = Math.atan2(_y, _x);

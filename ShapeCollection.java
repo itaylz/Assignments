@@ -112,7 +112,23 @@ public class ShapeCollection implements ShapeCollectionable{
     public Rect2D getBoundingBox() {
         Rect2D ans = null;
         //////////add your code below ///////////
-        if(_shapes.size()==0){
+        Point2D bottom_left = _shapes.get(0).getShape().getPoints()[0];
+        Point2D top_right = _shapes.get(0).getShape().getPoints()[0];
+        Point2D point;
+        for (GUI_Shapeable shape : _shapes) {
+            for (int i = 0; i < shape.getShape().getPoints().length; i++) {
+                point = shape.getShape().getPoints()[i];
+                if (point.y() > top_right.y())
+                    top_right = shape.getShape().getPoints()[i];
+                if (point.x() < bottom_left.x())
+                    bottom_left = shape.getShape().getPoints()[i];
+            }
+        }
+        ans = new Rect2D(bottom_left, top_right);
+        return ans;
+    }
+
+        /**if(_shapes.size()==0){
             return null;
         }
         ArrayList<Point2D> shapes = new ArrayList<Point2D>();
@@ -130,9 +146,9 @@ public class ShapeCollection implements ShapeCollectionable{
                shapes.add(left);
                shapes.add(right);
             }
-            Collections.addAll(shapes, g.getPoints());
+            //Collections.addAll(shapes, g.getPoints());
         }
-        ans = new Rect2D(sortPoints(shapes));
+        //ans = new Rect2D(sortPoints(shapes));
         //////////////////////////////////////////
         return ans;
     }
@@ -144,11 +160,11 @@ public class ShapeCollection implements ShapeCollectionable{
         Comparator<Point2D> comparator = new Comparator<Point2D>(){
             @Override
             public int compare(Point2D p1, Point2D p2) {
-                return Double.compare(p1.x(), p2.x());
+                return Double.compare(p1.x(), p2.x()), Double.compare(p1.y(),p2.y());
             }
         };
 
-        // Use an iterator to sort the points in the list using the comparator.
+         Use an iterator to sort the points in the list using the comparator.
         Iterator<Point2D> iterator = points.iterator();
         ArrayList<Point2D> box_points = new ArrayList<Point2D>();
         double minX;
@@ -174,7 +190,7 @@ public class ShapeCollection implements ShapeCollectionable{
             box_points.add(point4);
         }
         return box_points;
-    }
+    }*/
 
 
     @Override

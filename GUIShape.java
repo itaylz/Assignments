@@ -77,7 +77,31 @@ public class GUIShape implements GUI_Shapeable {
     }
 
     private void init(String[] ww) {
-
+        if (!ww[0].equals("GUIShape")) throw new IllegalArgumentException("String type is non-GUIShape");
+        try {
+            _color = new Color(Integer.parseInt(ww[1]));
+            _fill = Boolean.parseBoolean(ww[2]);
+            _tag = Integer.parseInt(ww[3]);
+        } catch (NumberFormatException e) {
+            System.err.println("ERROR: wrong string format for GUIShape initialization: " + e.getMessage());
+            throw e;
+        }
+        String type = ww[4];
+        String[] pointStrings = new String[ww.length - 5];
+        System.arraycopy(ww, 5, pointStrings, 0, pointStrings.length);
+        switch (type) {
+            case "Circle2D" -> {
+                try {
+                    _g = new Circle2D(new Point2D(Double.parseDouble(ww[5]), Double.parseDouble(ww[6])), Double.parseDouble(ww[7]));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("ERROR: wrong string format for Circle initialization: " + e.getMessage());
+                }
+            }
+            case "Segment2D" -> _g = new Segment2D(pointStrings);
+            case "Triangle2D" -> _g = new Triangle2D(pointStrings);
+            case "Rect2D" -> _g = new Rect2D(pointStrings);
+            case "Polygon2D" -> _g = new Polygon2D(pointStrings);
+        }
     }
 
     @Override

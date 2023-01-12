@@ -22,6 +22,12 @@ public class Polygon2D implements GeoShapeable{
 		_points = (ArrayList<Point2D>) points.clone();
 	}
 
+	public Polygon2D(String[] pointStrings) {
+		if(pointStrings.length % 2 !=0){
+			throw new IllegalArgumentException("Polygon cant be initialized with an odd number of elements");
+		}
+	}
+
 	public void addPoint(Point2D point){
 		_points.add(point);
 	}
@@ -55,19 +61,43 @@ public class Polygon2D implements GeoShapeable{
 	@Override
 	public double area() {
 		// TODO Auto-generated method stub
-		return 0;
+		double area = 0;
+		int counter = 0;
+
+		while ( counter < _points.size() ) {
+
+			Point2D first_point = _points.get(counter);
+			Point2D next_point = _points.get((counter + 1) % _points.size());
+			area += (first_point.x() * next_point.y()) - (first_point.y() * next_point.x());
+
+			counter++;
+		}
+		return Math.abs( area / 2 );
 	}
 
 	@Override
 	public double perimeter() {
 		// TODO Auto-generated method stub
-		return 0;
+		ArrayList<Double> sides = new ArrayList<Double>();
+		int i=0;
+		while(_points.iterator().hasNext()){
+			double distances = _points.get(i).distance(_points.get(i+1));
+			sides.add(distances);
+			i++;
+		}
+		double sum = 0;
+		for (int j=0;j<sides.size();j++){
+			sum+=sides.get(i);
+		}
+		return sum;
 	}
 
 	@Override
 	public void move(Point2D vec) {
 		// TODO Auto-generated method stub
-		
+		for (Point2D point:_points) {
+			point.move(vec);
+		}
 	}
 
 	@Override

@@ -15,9 +15,9 @@ public class
 Ex4Main {
 
     public static void main(String[] args) {
-        // t1();
+        t1();
         t2();
-        // t3(); // won't work "out of the box" - requires editing the code (save, load..)
+        t3(); // won't work "out of the box" - requires editing the code (save, load..)
     }
     // Minimal empty frame (no shapes)
     public static void t1() {
@@ -44,7 +44,7 @@ Ex4Main {
     public static void t3() {
         Ex4 ex4 = Ex4.getInstance();
         ShapeCollectionable shapes = ex4.getShape_Collection();
-        String file =".\\java_code\\Ex4\\Saves\\a0"; //make sure the file is your working directory.
+        String file =".\\Ex4\\Saves\\a0"; //make sure the file is your working directory.
         shapes.load(file);
         ex4.init(shapes);
         ex4.show();

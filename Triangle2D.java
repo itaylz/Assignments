@@ -15,12 +15,36 @@ public class Triangle2D implements GeoShapeable{
 	private Point2D _p1;
 	private Point2D _p2;
 	private Point2D _p3;
-
+	private ArrayList<Point2D> _points;
 	public Triangle2D(Point2D p1, Point2D p2, Point2D p3){
-		this._p1 = p1;
-		this._p2 = p2;
-		this._p3 = p3;
+		_p1 = new Point2D(p1);
+		_p2 = new Point2D(p2);
+		_p3 = new Point2D(p3);
 	}
+
+	public Triangle2D(ArrayList<Point2D> points){
+		if(points.size()>3){
+			throw new ArrayIndexOutOfBoundsException("cannot cast with more than 3 points");
+		}
+		else{
+			_points = new ArrayList<>();
+			_p1 = new Point2D(points.get(0));
+			_p2 = new Point2D(points.get(1));
+			_p3 = new Point2D(points.get(2));
+		}
+	}
+	public Triangle2D(String[] pointStrings) {
+		if (pointStrings.length < 6) throw new IllegalArgumentException("minimum 6 elements required to cast triangle");
+		try {
+			_p1 = new Point2D(Double.parseDouble(pointStrings[0]), Double.parseDouble(pointStrings[1]));
+			_p2 = new Point2D(Double.parseDouble(pointStrings[2]), Double.parseDouble(pointStrings[3]));
+			_p3 = new Point2D(Double.parseDouble(pointStrings[4]), Double.parseDouble(pointStrings[5]));
+		} catch (IllegalArgumentException e) {
+			System.err.println("ERROR: cannot cast triangle " + e.getMessage());
+		}
+	}
+
+
 
 	public String toString() {
 		return "" + _p1 + ',' + _p2 + ',' + _p3;
@@ -29,13 +53,14 @@ public class Triangle2D implements GeoShapeable{
 	@Override
 	public boolean contains(Point2D ot) {
 		// TODO Auto-generated method stub
-		//find equation of each side of triangle using points and segment
-		Segment2D seg1 = new Segment2D(_p1,_p2);
-		Segment2D seg2 = new Segment2D(_p2,_p3);
-		Segment2D seg3 = new Segment2D(_p3,_p1);
-
-
-		return false;
+		boolean ans = false;
+		double a = (_p1.x() - ot.x()) * (_p2.y() - ot.y()) - (_p1.y() - ot.y()) * (_p2.x() - ot.x());
+		double b = (_p2.x() - ot.x()) * (_p3.y() - ot.y()) - (_p2.y() - ot.y()) * (_p3.x() - ot.x());
+		double c = (_p3.x() - ot.x()) * (_p1.y() - ot.y()) - (_p3.y() - ot.y()) * (_p1.x() - ot.x());
+		if ((a >= 0 && b >= 0 && c >= 0) || (a <= 0 && b <= 0 && c <= 0)) {
+			ans = true;
+		}
+		return ans;
 	}
 
 	@Override
@@ -85,6 +110,26 @@ public class Triangle2D implements GeoShapeable{
 	public Point2D[] getPoints() {
 		// TODO Auto-generated method stub
 		return new Point2D[] { _p1, _p2, _p3 };
+	}
+
+	public double[] get_X() {
+		double[] ans = new double[3];
+		for(int i =0;i<3;i++){
+			ans[i] = this.getPoints()[i].x();
+		}
+		return ans;
+	}
+
+	public double[] get_Y() {
+		double[] ans = new double[3];
+		for(int i =0;i<3;i++){
+			ans[i] = this.getPoints()[i].y();
+		}
+		return ans;
+	}
+
+	public void addPoint(Point2D point){
+		_points.add(point);
 	}
 	
 }

@@ -1,3 +1,5 @@
+/* 203565676_318602885 */
+
 package Exe.Ex4;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -87,25 +89,31 @@ public class Ex4 implements Ex4_GUI {
 			}
 		}
 		if (gs instanceof Rect2D) {
-			Rect2D r = (Rect2D) gs;
-			Point2D p1 = r.getPoints()[0];
-			Point2D p2 = r.getPoints()[1];
-			double halfWidth = (p2.x() - p1.x()) / 2;
-			double halfHeight = (p2.y() - p1.y()) / 2;
-			double x = p1.x() + halfWidth;
-			double y = p1.y() + halfHeight;
+			Point2D[] points = ((Rect2D) gs).getSortedPoints();
+			double[] x_points = new double[points.length];
+			double[] y_points = new double[points.length];
+			for(int i=0;i<points.length;i++){
+				x_points[i] = points[i].x();
+				y_points[i] = points[i].y();
+			}
+
+			//Rect2D r = (Rect2D) gs;
+			//Point2D p1 = r.getPoints()[0];
+			//Point2D p2 = r.getPoints()[1];
+			//double halfWidth = (p2.x() - p1.x()) / 2;
+			//double halfHeight = (p2.y() - p1.y()) / 2;
+			//double x = p1.x() + halfWidth;
+			//double y = p1.y() + halfHeight;
 
 			if (isFill) {
-				StdDraw_Ex4.filledRectangle(x, y, halfWidth, halfHeight);
+				StdDraw_Ex4.filledPolygon(x_points,y_points);
 			} else {
-				StdDraw_Ex4.rectangle(x, y, halfWidth, halfHeight);
+				StdDraw_Ex4.polygon(x_points, y_points);
 			}
 		}
 
 		if (gs instanceof Polygon2D) {
 			Polygon2D poly = (Polygon2D) gs;
-			StdDraw_Ex4.polygon(poly.getX(), poly.getY());
-
 			if (isFill) {
 				StdDraw_Ex4.filledPolygon(poly.getX(), poly.getY());
 			} else {
@@ -117,6 +125,15 @@ public class Ex4 implements Ex4_GUI {
 			Segment2D seg = (Segment2D) gs;
 			Point2D[] seg_point = seg.getPoints();
 			StdDraw_Ex4.line(seg_point[0].x(),seg_point[0].y(),seg_point[1].x(),seg_point[1].y());
+		}
+
+		if(gs instanceof Triangle2D) {
+			Triangle2D tri = (Triangle2D) gs;
+			if (isFill) {
+				StdDraw_Ex4.filledPolygon(tri.get_X(), tri.get_Y());
+			} else {
+				StdDraw_Ex4.polygon(tri.get_X(), tri.get_Y());
+			}
 		}
 	}
 
@@ -227,6 +244,16 @@ public class Ex4 implements Ex4_GUI {
 		}
 	}
 
+	private void rotateSelected(Point2D center, double angleDegrees) {  // same thing as last function
+		for (int i = 0; i < _shapes.size(); ++i) {
+			GUI_Shapeable s = _shapes.get(i);
+			GeoShapeable g = s.getShape();
+			if (s.isSelected() && g != null) {
+				g.rotate(center, angleDegrees);
+			}
+		}
+	}
+
 
 	public void mouseClicked(Point2D p) {
 		System.out.println("Mode: " + _mode + "  " + p);
@@ -239,6 +266,18 @@ public class Ex4 implements Ex4_GUI {
 				_gs.setFilled(_fill);
 				_shapes.add(_gs);
 				_gs = null;
+				_p1 = null;
+			}
+		}
+
+		if(_mode.equals("Rotate")){
+			if(_p1==null){
+				_p1 = new Point2D(p);
+			}
+			else {
+				Point2D vec = _p1.vector(p);
+				double rotate_by = vec.angleDegrees();
+				rotateSelected(_p1,rotate_by);
 				_p1 = null;
 			}
 		}
@@ -265,9 +304,16 @@ public class Ex4 implements Ex4_GUI {
 				_p1 = null;
 			}
 		}
-		if (_mode.equals("Rectangle")) {
+		if (_mode.equals("Rect")) {
 			if (_p1 == null) {
 				_p1 = new Point2D(p);
+			}
+			else {
+				_gs.setColor(_color);
+				_gs.setFilled(_fill);
+				_shapes.add(_gs);
+				_gs = null;
+				_p1 = null;
 			}
 		}
 		if (_mode.equals("Point")) {
@@ -279,11 +325,25 @@ public class Ex4 implements Ex4_GUI {
 				_polyPoints.add(p);
 				_p1 = new Point2D(p);
 			} else {
+				_polyPoints.add(p);
+			}
+			drawShapes();
+		}
+
+		if(_mode.equals("Triangle")){
+			if(_gs == null){
+				_p1 = new Point2D(p);
+			}
+			else if (_p1!=null &&_p2==null){
+				_p2 = new Point2D(p);
+			}
+			else {
 				_gs.setColor(_color);
 				_gs.setFilled(_fill);
 				_shapes.add(_gs);
 				_gs = null;
 				_p1 = null;
+				_p2 = null;
 			}
 			drawShapes();
 		}
@@ -332,8 +392,8 @@ public class Ex4 implements Ex4_GUI {
 					gs = new Circle2D(_p1, r);
 				}
 
-				if(_mode.equals("Rectangle")){
-					Rect2D rec = new Rect2D(_p1, new Point2D(_p1.x(),_p1.y()+p.y()) ,new Point2D(_p1.x()+p.x(),p.y()),p);
+				if(_mode.equals("Rect")){
+					Rect2D rec = new Rect2D(_p1,p);
 					gs = rec;
 				}
 
@@ -348,7 +408,19 @@ public class Ex4 implements Ex4_GUI {
 					gs = poly;
 				}
 
+				if(_mode.equals("Triangle")){
+					if(_p2 == null){
+						Segment2D line1 = new Segment2D(_p1,p);
+						gs = line1;
+					}
+					else {
+						Triangle2D tri = new Triangle2D(_p1,_p2,p);
+						gs = tri;
+					}
+				}
+
 				_gs = new GUIShape(gs, false, Color.pink, 0);
+				//_gs.setShape(gs);
 				drawShapes();
 			}
 		}

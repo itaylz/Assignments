@@ -27,6 +27,15 @@ public class Segment2D implements GeoShapeable{
 		this(seg.getPoints()[0], seg.getPoints()[1]);
 	}
 
+	public Segment2D(String[] pointStrings) {
+		if(pointStrings.length<4){
+			throw new IllegalArgumentException("Cannot cast segment with less than 4 elements");
+		}
+		_point1 = new Point2D(Double.parseDouble(pointStrings[0]),Double.parseDouble(pointStrings[1]));
+		_point2 = new Point2D(Double.parseDouble(pointStrings[2]),Double.parseDouble(pointStrings[4]));
+	}
+
+
 
 	@Override
 	public boolean contains(Point2D ot) {
@@ -45,8 +54,8 @@ public class Segment2D implements GeoShapeable{
 	@Override
 	public double perimeter() {
 		// TODO Auto-generated method stub
-		double dist = Math.sqrt(Math.pow((_point2.x()- _point1.x()),2)+Math.pow((_point2.y()- _point1.y()),2));
-		return dist*2;
+		return _point1.distance(_point2)*2;
+
 	}
 
 	@Override
@@ -76,11 +85,6 @@ public class Segment2D implements GeoShapeable{
 		_point2.rotate(center,angleDegrees);
 	}
 
-	public double distance(Segment2D seg){
-		Point2D[] point = seg.getPoints();
-		return Math.sqrt(Math.pow(point[1].x()-point[0].x(),2)+Math.pow(point[1].y()-point[0].y(),2));
-	}
-
 	@Override
 	public Point2D[] getPoints() {
 		// TODO Auto-generated method stub
@@ -88,12 +92,3 @@ public class Segment2D implements GeoShapeable{
 	}
 	
 }
-
-
-
-
-
-
-
-
-
